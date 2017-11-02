@@ -1,11 +1,9 @@
 import os
-import time
 from distutils.version import LooseVersion
 
 from django.core.management.base import BaseCommand
 from django.utils.version import get_version
 from django_rq import get_scheduler
-
 
 SCHEDULER_INTERVAL_SECONDS = 30
 
@@ -37,7 +35,7 @@ class Command(BaseCommand):
 
         scheduler = get_scheduler(
             name=options.get('queue'), interval=options.get('interval'))
-
+        
         self.stdout.write("Waiting to acquire lock...")
         while True:
             try:
