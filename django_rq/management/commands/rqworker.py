@@ -1,5 +1,6 @@
 import os
 import sys
+import uuid
 from distutils.version import LooseVersion
 
 from redis.exceptions import ConnectionError
@@ -78,7 +79,7 @@ class Command(BaseCommand):
                 'worker_class': options['worker_class'],
                 'queue_class': options['queue_class'],
                 'job_class': options['job_class'],
-                'name': options['name'],
+                'name': options['name'] if 'name' in options else uuid.uuid4().hex,
                 'default_worker_ttl': options['worker_ttl'],
             }
             w = get_worker(*args, **worker_kwargs)
