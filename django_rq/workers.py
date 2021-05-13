@@ -1,3 +1,5 @@
+import uuid
+
 from rq import Worker
 from rq.utils import import_attribute
 
@@ -44,12 +46,14 @@ def get_worker(*queue_names, **kwargs):
     """
     job_class = get_job_class(kwargs.pop('job_class', None))
     queue_class = kwargs.pop('queue_class', None)
+    name = kwargs.pop('name', uuid.uuid4().hex)
     queues = get_queues(*queue_names, **{'job_class': job_class,
                                          'queue_class': queue_class})
     # normalize queue_class to what get_queues returns
     queue_class = queues[0].__class__
     worker_class = get_worker_class(kwargs.pop('worker_class', None))
     return worker_class(queues,
+                        name=name,
                         connection=queues[0].connection,
                         exception_handlers=get_exception_handlers() or None,
                         job_class=job_class,
